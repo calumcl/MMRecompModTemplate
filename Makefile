@@ -39,11 +39,16 @@ else
 endif
 
 $(C_OBJS): $(BUILD_DIR)/%.o : %.c | $(BUILD_DIR) $(BUILD_DIR)/src
-	$(CC) $(CFLAGS) $(CPPFLAGS) $< -MMD -MF $(@:.o=.d) -c -o $@
+	bear --append -- $(CC) $(CFLAGS) $(CPPFLAGS) $< -MMD -MF $(@:.o=.d) -c -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f compile_commands.json
+
+compile_commands:
+# This should be done automatically by bear - but this is an option if needed.
+	bear --append -- $(MAKE) -B
 
 -include $(C_DEPS)
 
-.PHONY: clean
+.PHONY: clean compile_commands.json
